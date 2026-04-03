@@ -1,0 +1,23 @@
+# Build output
+dist/
+
+# Generated library bundles (rebuild with ./bundle-*.sh scripts)
+js/lib/
+
+# Dependencies (if npm is run from this folder)
+node_modules/
+
+# OS and editor
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Internal security notes
+security-analysis.txt

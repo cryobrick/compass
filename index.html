@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=240, height=320, user-scalable=no" />
+    <title>Compass</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- App Container - Screens are rendered here dynamically -->
+    <div id="app-container"></div>
+
+    <!-- Core Scripts -->
+    <script src="js/navigation.js"></script>
+
+    <!-- BIP39 Library (for mnemonic generation) -->
+    <script src="js/lib/bip39-bundle.js"></script>
+
+    <!-- Address Libraries (BIP32 + bitcoinjs-lib for address generation) -->
+    <script src="js/lib/address-bundle.js"></script>
+
+    <!-- PSBT Libraries (bip174 + jsQR) - LAZY LOADED: Loaded dynamically when needed to avoid memory issues -->
+    <!-- Removed from static loading - will be loaded by ready-to-sign.js -->
+
+    <!-- QR Code Library -->
+    <script src="js/lib/qrcode-bundle.js"></script>
+
+    <!-- Services -->
+    <script src="js/services/crypto.js"></script>
+    <script src="js/services/wallet.js"></script>
+    <script src="js/services/pin.js"></script>
+    <!-- Alternative PSBT Service - Uses only bitcoinjs-lib (already loaded) -->
+    <script src="js/services/psbt-alternative.js"></script>
+
+    <!-- Screen Scripts -->
+    <script src="js/screens/splash.js"></script>
+    <script src="js/screens/compass.js"></script>
+    <script src="js/screens/create-pin.js"></script>
+    <script src="js/screens/welcome.js"></script>
+    <script src="js/screens/create-wallet.js"></script>
+    <script src="js/screens/restore-wallet.js"></script>
+    <script src="js/screens/set-password.js"></script>
+    <script src="js/screens/enter-password.js"></script>
+    <script src="js/screens/home.js"></script>
+    <script src="js/screens/help.js"></script>
+    <script src="js/screens/backup.js"></script>
+    <script src="js/screens/address-explorer.js"></script>
+    <script src="js/screens/export-xpub.js"></script>
+    <script src="js/screens/ready-to-sign.js"></script>
+
+    <!-- Main App -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

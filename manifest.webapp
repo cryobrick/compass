@@ -1,0 +1,38 @@
+{
+  "version": "0.1.0",
+  "name": "Compass",
+  "description": "Simple offline maps and location bookmarks",
+  "type": "privileged",
+  "origin": "app://cryobrick.com",
+  "launch_path": "/index.html",
+  "icons": {
+    "56": "/icons/compass-56.png",
+    "112": "/icons/compass-112.png"
+  },
+  "developer": {
+    "name": "Compass",
+    "url": "https://github.com/aniketambore"
+  },
+  "permissions": {
+    "camera": {
+      "description": "Required for scanning PSBT QR codes"
+    },
+    "video-capture": {
+      "description": "Required for scanning PSBT QR codes"
+    },
+    "device-storage:sdcard": {
+      "access": "readonly",
+      "description": "Required to read PSBT files from SD card"
+    }
+  },
+  "locales": {
+    "en-US": {
+      "name": "Compass",
+      "subtitle": "Offline Maps & Bookmarks",
+      "description": "Save and organize your favorite locations offline"
+    }
+  },
+  "default_locale": "en-US",
+  "orientation": ["portrait-primary"],
+  "fullscreen": "true"
+}

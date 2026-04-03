@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>KaiOS Simulator - Compass</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        font-family: system-ui, -apple-system, sans-serif;
+        min-height: 100vh;
+      }
+      .container {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .device {
+        background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+      .screen-container {
+        background: #000;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .screen {
+        width: 240px;
+        height: 320px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+      iframe {
+        width: 240px;
+        height: 290px;
+        border: none;
+        background: #ffffff;
+      }
+      iframe:focus {
+        outline: none;
+      }
+      .softkeys {
+        height: 30px;
+        background: linear-gradient(180deg, #444, #333);
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 8px;
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .softkeys span {
+        flex: 1;
+        text-align: center;
+      }
+      .softkeys span:first-child {
+        text-align: left;
+      }
+      .softkeys span:last-child {
+        text-align: right;
+      }
+      .dpad {
+        display: flex;
+        justify-content: center;
+        padding: 16px 0 8px;
+      }
+      .dpad-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 28px);
+        grid-template-rows: repeat(3, 28px);
+        gap: 2px;
+      }
+      .dpad-btn {
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        border: none;
+        border-radius: 4px;
+        color: #888;
+        font-size: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dpad-btn:hover {
+        background: linear-gradient(145deg, #4a4a4a, #3a3a3a);
+        color: #fff;
+      }
+      .dpad-btn:active {
+        background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
+      }
+      .dpad-center {
+        background: linear-gradient(145deg, #4a7c59, #3a6349);
+        color: #fff;
+        font-weight: bold;
+      }
+      .dpad-center:hover {
+        background: linear-gradient(145deg, #5a8c69, #4a7359);
+      }
+      .dpad-empty {
+        background: transparent;
+        cursor: default;
+      }
+      .debug {
+        background: #16213e;
+        border-radius: 12px;
+        padding: 16px;
+        width: 280px;
+        color: #e8e8e8;
+      }
+      .debug h3 {
+        font-size: 14px;
+        margin-bottom: 12px;
+        color: #00d9ff;
+      }
+      .debug-section {
+        margin-bottom: 16px;
+      }
+      .debug-section h4 {
+        font-size: 11px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+      .key-hint {
+        font-size: 11px;
+        line-height: 1.6;
+        color: #aaa;
+      }
+      .key-hint code {
+        background: #2a3f5f;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+        color: #00d9ff;
+      }
+      .key-log {
+        height: 150px;
+        overflow-y: auto;
+        background: #0d1b2a;
+        border-radius: 6px;
+        padding: 8px;
+        font-family: monospace;
+        font-size: 11px;
+        color: #6c757d;
+      }
+      .key-log .entry {
+        padding: 2px 0;
+        border-bottom: 1px solid #1a2d42;
+      }
+      .key-log .key {
+        color: #00d9ff;
+      }
+      .focus-hint {
+        text-align: center;
+        font-size: 10px;
+        color: #666;
+        padding: 8px;
+        background: rgba(0, 217, 255, 0.1);
+        border-radius: 4px;
+        margin-top: 8px;
+      }
+      .focus-hint.focused {
+        background: rgba(74, 124, 89, 0.2);
+        color: #4a7c59;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="device">
+        <div class="screen-container">
+          <div class="screen">
+            <iframe id="app" src="index.html" tabindex="0"></iframe>
+            <div class="softkeys">
+              <span>Q: Options</span>
+              <span>● SELECT</span>
+              <span>E: Back</span>
+            </div>
+          </div>
+        </div>
+        <div class="dpad">
+          <div class="dpad-grid">
+            <div class="dpad-btn dpad-empty"></div>
+            <button class="dpad-btn" onclick="sendKey('ArrowUp')">▲</button>
+            <div class="dpad-btn dpad-empty"></div>
+            <button class="dpad-btn" onclick="sendKey('ArrowLeft')">◄</button>
+            <button class="dpad-btn dpad-center" onclick="sendKey('Enter')">
+              OK
+            </button>
+            <button class="dpad-btn" onclick="sendKey('ArrowRight')">►</button>
+            <div class="dpad-btn dpad-empty"></div>
+            <button class="dpad-btn" onclick="sendKey('ArrowDown')">▼</button>
+            <div class="dpad-btn dpad-empty"></div>
+          </div>
+        </div>
+        <div class="focus-hint" id="focusHint">Click screen to focus</div>
+      </div>
+
+      <div class="debug">
+        <h3>Compass KaiOS Simulator</h3>
+
+        <div class="debug-section">
+          <h4>Keyboard Controls</h4>
+          <div class="key-hint">
+            <code>↑</code> <code>↓</code> Navigate items<br />
+            <code>Enter</code> Select / Confirm<br />
+            <code>Esc</code> Back / Cancel<br />
+            <code>Q</code> Soft Left (Options)<br />
+            <code>E</code> Soft Right
+          </div>
+        </div>
+
+        <div class="debug-section">
+          <h4>Key Log</h4>
+          <div class="key-log" id="keyLog">
+            <div class="entry">Ready. Click screen & press keys.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var iframe = document.getElementById("app");
+      var keyLog = document.getElementById("keyLog");
+      var focusHint = document.getElementById("focusHint");
+
+      // Key mapping for display
+      var keyNames = {
+        ArrowUp: "↑ Up",
+        ArrowDown: "↓ Down",
+        ArrowLeft: "← Left",
+        ArrowRight: "→ Right",
+        Enter: "⏎ Enter",
+        Escape: "⎋ Escape",
+        q: "Q (Soft Left)",
+        Q: "Q (Soft Left)",
+        e: "E (Soft Right)",
+        E: "E (Soft Right)",
+      };
+
+      // Navigation keys that we track
+      var navKeys = [
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "Enter",
+        "Escape",
+        "q",
+        "Q",
+        "e",
+        "E",
+      ];
+
+      function logKey(key, source) {
+        var time = new Date().toLocaleTimeString();
+        var displayName = keyNames[key] || key;
+        var entry = document.createElement("div");
+        entry.className = "entry";
+        entry.innerHTML =
+          '<span style="color:#666">' +
+          time +
+          '</span> <span class="key">' +
+          displayName +
+          '</span> <span style="color:#555">(' +
+          source +
+          ")</span>";
+        keyLog.insertBefore(entry, keyLog.firstChild);
+
+        // Keep log manageable
+        while (keyLog.children.length > 50) {
+          keyLog.removeChild(keyLog.lastChild);
+        }
+      }
+
+      // Track key presses on the whole document for logging
+      document.addEventListener("keydown", function (e) {
+        if (navKeys.indexOf(e.key) !== -1) {
+          logKey(e.key, "keyboard");
+        }
+      });
+
+      // D-pad button clicks
+      function sendKey(key) {
+        logKey(key, "d-pad");
+        iframe.focus();
+      }
+
+      // Focus tracking
+      iframe.addEventListener("focus", function () {
+        focusHint.textContent = "✓ Screen focused - keys active";
+        focusHint.classList.add("focused");
+      });
+
+      iframe.addEventListener("blur", function () {
+        focusHint.textContent = "Click screen to focus";
+        focusHint.classList.remove("focused");
+      });
+
+      // Click device to focus iframe
+      document.querySelector(".screen").addEventListener("click", function () {
+        iframe.focus();
+      });
+    </script>
+  </body>
+</html>

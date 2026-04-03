@@ -1,0 +1,996 @@
+/* Compass - KaiOS Styles */
+/* Screen: 240x320 */
+/* Light Theme */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: #ffffff !important;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  background: #ffffff !important;
+  color: #000000 !important;
+  width: 240px;
+  height: 320px;
+  overflow: hidden;
+}
+
+#app-container {
+  width: 240px;
+  height: 320px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Screen Management */
+.screen {
+  display: none;
+  width: 240px;
+  height: 320px;
+  flex-direction: column;
+  background: #ffffff !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* Splash Screen */
+#splash-screen {
+  justify-content: center;
+  align-items: center;
+  background: #ffffff !important;
+}
+
+.splash-content {
+  text-align: center;
+}
+
+.splash-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000000 !important;
+  margin-bottom: 8px;
+}
+
+.splash-subtitle {
+  font-size: 12px;
+  color: #666666 !important;
+}
+
+/* Screen Layout */
+.screen-header {
+  min-height: 48px;
+  padding: 8px;
+  background: #f5f5f5 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000 !important;
+}
+
+.header-subtitle {
+  font-size: 11px;
+  color: #666666 !important;
+  margin-top: 2px;
+}
+
+.screen-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  padding: 8px;
+  background: #ffffff !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen-footer {
+  height: 26px;
+  background: #e0e0e0 !important;
+  display: flex;
+  border-top: 1px solid #cccccc;
+}
+
+/* Softkeys */
+.softkey {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #666666 !important;
+  text-transform: uppercase;
+}
+
+.softkey-left {
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+
+.softkey-center {
+  color: #000000 !important;
+  font-weight: bold;
+}
+
+.softkey-right {
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+/* Menu List */
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  padding: 12px;
+  background: #f0f0f0 !important;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #000000 !important;
+  transition: background 0.1s;
+}
+
+/* Compact menu items for home screen to fit all options on 320px screen */
+#home-screen .menu-item {
+  padding: 8px 12px;
+}
+
+.menu-item.focused {
+  background: #0066cc !important;
+  color: #ffffff !important;
+}
+
+/* Mnemonic Display */
+.mnemonic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 100%;
+}
+
+.mnemonic-word {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  background: #f8f8f8 !important;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.mnemonic-word.focused {
+  background: #0066cc !important;
+}
+
+.mnemonic-word.focused .word-number,
+.mnemonic-word.focused .word-text {
+  color: #ffffff !important;
+}
+
+.word-number {
+  width: 24px;
+  font-weight: bold;
+  color: #999999 !important;
+  font-size: 10px;
+}
+
+.word-text {
+  color: #000000 !important;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+/* Confirm Button in mnemonic list */
+.confirm-button {
+  margin-top: 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Restore Wallet - Mnemonic Input */
+.mnemonic-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 8px;
+}
+
+.mnemonic-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.mnemonic-input-row .word-number {
+  width: 24px;
+  font-weight: bold;
+  color: #999999 !important;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.mnemonic-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: monospace;
+  background: #ffffff !important;
+  color: #000000 !important;
+  outline: none;
+}
+
+.mnemonic-input:focus {
+  border-color: #0066cc;
+  background: #f0f7ff !important;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.mnemonic-input::placeholder {
+  color: #999999 !important;
+  font-style: italic;
+}
+
+.restore-error {
+  padding: 8px;
+  margin-top: 8px;
+  background: #ffe6e6 !important;
+  border: 1px solid #ff9999;
+  border-radius: 3px;
+  color: #cc0000 !important;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* Export Xpub Screen */
+.export-xpub-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+}
+
+/* Address Explorer */
+.address-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+}
+
+.qr-container {
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+}
+
+.qr-container img {
+  display: block;
+  max-width: 140px;
+  height: auto;
+}
+
+.qr-code {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0 auto;
+  display: block;
+}
+
+.qr-code td {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.qr-code {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.address-text {
+  font-family: monospace;
+  font-size: 10px;
+  color: #000000 !important;
+  text-align: center;
+  word-break: break-all;
+  padding: 8px 4px;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  max-width: 100%;
+}
+
+.address-index {
+  font-size: 10px;
+  color: #666666 !important;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.qr-error {
+  padding: 20px;
+  text-align: center;
+  color: #cc0000 !important;
+  font-size: 12px;
+}
+
+.xpub-text {
+  width: 100%;
+  text-align: center;
+}
+
+.xpub-label {
+  font-size: 10px;
+  color: #666666 !important;
+  margin-bottom: 4px;
+}
+
+.xpub-truncated {
+  font-family: monospace;
+  font-size: 11px;
+  color: #000000 !important;
+  background: #f0f0f0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.xpub-full {
+  font-family: monospace;
+  font-size: 8px;
+  color: #666666 !important;
+  word-break: break-all;
+  line-height: 1.3;
+  padding: 4px;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.xpub-error {
+  color: #cc0000 !important;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Utility */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #666666 !important;
+  font-size: 12px;
+}
+
+/* Ready To Sign Screen */
+.psbt-state {
+  padding: 12px;
+}
+
+.psbt-instructions {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.psbt-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  font-size: 11px;
+  font-family: monospace;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  margin-bottom: 8px;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 12px;
+  padding: 8px;
+  background: #ffebee;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+/* Removed .psbt-actions and .btn-* classes - now using .menu-item instead */
+
+/* QR Scanning Progress */
+.scan-progress {
+  margin: 12px 0;
+  padding: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+#progress-text {
+  font-size: 12px;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #0066cc;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Camera Preview */
+.camera-preview-container {
+  width: 100%;
+  max-height: 180px;
+  margin: 8px 0;
+  background: #000000;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.camera-preview {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+}
+
+.transaction-details {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.tx-detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tx-detail-item:last-child {
+  border-bottom: none;
+}
+
+.tx-detail-label {
+  font-weight: bold;
+  color: #666;
+  font-size: 12px;
+}
+
+.tx-detail-value {
+  color: #000;
+  font-size: 12px;
+  text-align: right;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.success-message {
+  text-align: center;
+  padding: 12px;
+  color: #2e7d32;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+/* Library Status Indicator */
+.library-status {
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-align: center;
+}
+
+.library-status.loading {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
+.library-status.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #28a745;
+}
+
+.library-status.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #dc3545;
+}
+
+.library-status-text {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+/* Error message styling for review state */
+#psbt-review-error {
+  margin-bottom: 12px;
+  white-space: pre-line; /* Allow line breaks in error messages */
+  max-height: 120px;
+  overflow-y: auto;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* Compass Screen - Plausible Deniability */
+.compass-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.compass-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin-bottom: 16px;
+}
+
+.compass-ring {
+  width: 100%;
+  height: 100%;
+  border: 3px solid #333;
+  border-radius: 50%;
+  background: #f8f8f8;
+  position: relative;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.compass-markings {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.compass-mark {
+  position: absolute;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin-left: -10px;
+  margin-top: -10px;
+}
+
+.compass-mark-n {
+  top: 8px;
+  left: 50%;
+  color: #cc0000;
+}
+
+.compass-mark-e {
+  top: 50%;
+  right: 8px;
+  margin-top: -10px;
+  margin-right: -10px;
+  margin-left: 0;
+}
+
+.compass-mark-s {
+  bottom: 8px;
+  left: 50%;
+}
+
+.compass-mark-w {
+  top: 50%;
+  left: 8px;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+
+.compass-needle-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 80px;
+  margin-left: -2px;
+  margin-top: -40px;
+  transform-origin: center center;
+  transition: transform 0.3s ease;
+}
+
+.compass-needle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.compass-needle-north {
+  top: 0;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 0 6px 50px 6px;
+  border-color: transparent transparent #cc0000 transparent;
+  z-index: 2;
+}
+
+.compass-needle-south {
+  bottom: 0;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 30px 4px 0 4px;
+  border-color: #666 transparent transparent transparent;
+  z-index: 1;
+}
+
+.compass-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  margin-top: -6px;
+  background: #333;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  z-index: 3;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.compass-info {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.compass-degree {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.compass-direction {
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Password Screens (Set Password / Enter Password) */
+.password-instructions {
+  font-size: 11px;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 8px;
+  padding: 0 4px;
+  line-height: 1.4;
+}
+
+.password-requirements {
+  font-size: 10px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 4px 8px;
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+.password-input-group {
+  margin-bottom: 8px;
+}
+
+.password-label {
+  display: block;
+  font-size: 11px;
+  color: #666666;
+  margin-bottom: 3px;
+  padding-left: 2px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: monospace;
+  background: #ffffff !important;
+  color: #000000 !important;
+  outline: none;
+}
+
+.password-input:focus {
+  border-color: #0066cc;
+  background: #f0f7ff !important;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.password-input::placeholder {
+  color: #999999 !important;
+  font-style: italic;
+}
+
+/* Password Checklist (real-time validation) */
+.pw-checklist {
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  background: #f8f8f8;
+  border-radius: 3px;
+}
+
+.pw-check {
+  font-size: 11px;
+  color: #999999;
+  padding: 2px 0;
+  line-height: 1.4;
+}
+
+.pw-check-icon {
+  display: inline-block;
+  width: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.pw-check.pw-check-pass {
+  color: #2e7d32;
+}
+
+.pw-check.pw-check-pass .pw-check-icon {
+  color: #2e7d32;
+}
+
+.pw-check.pw-check-fail {
+  color: #cc0000;
+}
+
+.pw-check.pw-check-fail .pw-check-icon {
+  color: #cc0000;
+}
+
+.password-error {
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  background: #ffe6e6 !important;
+  border: 1px solid #ff9999;
+  border-radius: 3px;
+  color: #cc0000 !important;
+  font-size: 11px;
+  text-align: center;
+}
+
+.password-status {
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  background: #e8f5e9 !important;
+  border: 1px solid #a5d6a7;
+  border-radius: 3px;
+  color: #2e7d32 !important;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* Create PIN Screen */
+.create-pin-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.create-pin-dots {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.create-pin-dot {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+  color: #000;
+}
+
+.create-pin-dot.filled {
+  background: #333;
+  color: #fff;
+}
+
+.create-pin-error {
+  margin-top: 12px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #cc0000;
+  text-align: center;
+  max-width: 100%;
+}
+
+/* Transaction Review — Per-Output Details */
+.tx-summary-section {
+  text-align: center;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: #e8f5e9;
+  border-radius: 4px;
+  border: 1px solid #a5d6a7;
+}
+
+.tx-summary-label {
+  font-size: 10px;
+  font-weight: bold;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tx-summary-amount {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  margin: 2px 0;
+}
+
+.tx-summary-to {
+  font-size: 10px;
+  color: #666;
+  font-family: monospace;
+}
+
+.tx-output-item {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.tx-output-item.focused {
+  background: #0066cc !important;
+  border-color: #004c99;
+}
+
+.tx-output-item.focused .tx-output-label,
+.tx-output-item.focused .tx-output-amount,
+.tx-output-item.focused .tx-output-address {
+  color: #ffffff !important;
+}
+
+.tx-output-item.focused .tx-output-type {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.tx-output-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tx-output-label {
+  font-size: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.tx-output-type {
+  font-size: 9px;
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 2px;
+  border: 1px solid;
+  text-transform: uppercase;
+}
+
+.type-send {
+  color: #d84315;
+  border-color: #d84315;
+}
+
+.type-change {
+  color: #1565c0;
+  border-color: #1565c0;
+}
+
+.tx-output-amount {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000;
+  font-family: monospace;
+}
+
+.tx-output-address {
+  font-family: monospace;
+  font-size: 10px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.tx-fee-section {
+  margin-top: 8px;
+  padding: 4px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.fee-warning {
+  padding: 6px 8px;
+  margin-top: 4px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
+.fee-warning-extreme {
+  background: #f8d7da;
+  color: #721c24;
+  border-color: #dc3545;
+}
+
+.fee-warning-unknown {
+  background: #fff3cd;
+  color: #856404;
+  border-color: #ffc107;
+}
