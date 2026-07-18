@@ -536,6 +536,31 @@ var PSBTServiceAlternative = (function () {
   }
 
   /**
+   * Normalize raw file bytes into a base64 PSBT string.
+   * Sparrow (and most desktop wallets) write raw binary starting with
+   * magic bytes 70 73 62 74 ff; Blue Wallet writes base64 text.
+   */
+  function psbtBytesToBase64(bytesInput) {
+    if (typeof window.Buffer === "undefined") {
+      throw new Error("Buffer polyfill not loaded");
+    }
+    var bytes = bytesInput instanceof Uint8Array
+      ? bytesInput
+      : new Uint8Array(bytesInput);
+    if (
+      bytes.length >= 5 &&
+      bytes[0] === 0x70 &&
+      bytes[1] === 0x73 &&
+      bytes[2] === 0x62 &&
+      bytes[3] === 0x74 &&
+      bytes[4] === 0xff
+    ) {
+      return Buffer.from(bytes).toString("base64");
+    }
+    return Buffer.from(bytes).toString("utf8").trim().replace(/\s/g, "");
+  }
+
+  /**
    * Get transaction information from PSBT with per-output details
    */
   function getTransactionInfo(psbt) {
@@ -1198,6 +1223,7 @@ var PSBTServiceAlternative = (function () {
   // Public API - matches original PSBTService interface
   return {
     parsePSBT: parsePSBT,
+    psbtBytesToBase64: psbtBytesToBase64,
     getTransactionInfo: getTransactionInfo,
     identifyChangeOutputs: identifyChangeOutputs,
     computeFeeWarning: computeFeeWarning,

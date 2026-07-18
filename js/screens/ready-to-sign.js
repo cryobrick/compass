@@ -36,7 +36,7 @@ var ReadyToSignScreen = {
       '<div class="menu-item focusable" data-index="0" data-action="import-psbt-file">' +
       "Import PSBT File" +
       "</div>" +
-      '<input type="file" id="psbt-file-input" accept=".psbt" style="display: none;" />' +
+      '<input type="file" id="psbt-file-input" accept=".psbt,.txt" style="display: none;" />' +
       // Manual entry for base64 PSBT
       '<div id="manual-entry-section" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">' +
       '<div class="psbt-instructions" style="font-size: 11px; margin-bottom: 8px; color: #666;">' +
@@ -223,6 +223,11 @@ var ReadyToSignScreen = {
     if (!addr) return "(unknown script)";
     if (addr.length <= 18) return addr;
     return addr.substring(0, 10) + "..." + addr.substring(addr.length - 6);
+  },
+
+  isPSBTFileName: function (name) {
+    var n = (name || "").toLowerCase();
+    return n.endsWith(".psbt") || n.endsWith(".txt");
   },
 
   showReviewState: function (txInfo) {
@@ -845,8 +850,8 @@ var ReadyToSignScreen = {
             }
 
             // Check file extension
-            if (!fileName.toLowerCase().endsWith(".psbt")) {
-              self.showError("Invalid file type. Please select a .psbt file.");
+            if (!self.isPSBTFileName(fileName)) {
+              self.showError("Invalid file type. Please select a .psbt or .txt file.");
               return;
             }
 
@@ -854,33 +859,28 @@ var ReadyToSignScreen = {
             var reader = new FileReader();
             reader.onload = function (e) {
               try {
-                var fileContent = e.target.result;
-
-                // PSBT files from Blue Wallet are base64 encoded
-                // Remove any whitespace/newlines
-                var psbtString = fileContent.trim().replace(/\s/g, "");
+                var psbtService =
+                  typeof PSBTServiceAlternative !== "undefined"
+                    ? PSBTServiceAlternative
+                    : PSBTService;
+                var psbtString = psbtService.psbtBytesToBase64(
+                  new Uint8Array(e.target.result)
+                );
 
                 if (!psbtString) {
                   self.showError("File is empty or invalid.");
                   return;
                 }
 
-                // Hide any previous errors
                 self.hideError();
 
-                // Process the PSBT
-                // Try parsing as base64 PSBT first (most common format)
                 try {
-                  self.psbt = PSBTService.parsePSBT(psbtString);
-
-                  // Get transaction info
-                  var txInfo = PSBTService.getTransactionInfo(self.psbt);
-
-                  // Show review state
+                  self.psbt = psbtService.parsePSBT(psbtString);
+                  var txInfo = psbtService.getTransactionInfo(self.psbt);
                   self.showReviewState(txInfo);
                 } catch (parseError) {
-                  // If base64 parsing fails, try as UR format
-                  self.processPSBTString(psbtString);
+                  self.showError("Failed to parse PSBT:\n" + parseError.message);
+                  console.error("PSBT Parse Error:", parseError);
                 }
               } catch (error) {
                 self.showError("Failed to read PSBT file: " + error.message);
@@ -893,8 +893,7 @@ var ReadyToSignScreen = {
               console.error("FileReader error:", error);
             };
 
-            // Read file as text (PSBT files are base64 text)
-            reader.readAsText(blob);
+            reader.readAsArrayBuffer(blob);
           };
 
           activity.onerror = function (error) {
@@ -951,7 +950,7 @@ var ReadyToSignScreen = {
       return false;
     }
 
-    this.showError("Scanning storage for .psbt files...");
+    this.showError("Scanning storage for PSBT files...");
 
     var psbtFiles = [];
     var pendingCursors = storages.length;
@@ -1014,8 +1013,8 @@ var ReadyToSignScreen = {
           cursor.onsuccess = function () {
             if (this.result) {
               var file = this.result;
-              // Case-insensitive check for .psbt extension
-              if (file.name && file.name.toLowerCase().endsWith(".psbt")) {
+              // Accept .psbt or .txt PSBT exports (case-insensitive)
+              if (file.name && self.isPSBTFileName(file.name)) {
                 console.log("Found PSBT: " + file.name + " on " + storageName);
                 psbtFiles.push({
                   name: file.name,
@@ -1065,36 +1064,24 @@ var ReadyToSignScreen = {
     var reader = new FileReader();
     reader.onload = function (e) {
       try {
-        var fileContent = e.target.result;
-
-        // PSBT files from Blue Wallet are base64 encoded
-        // Remove any whitespace/newlines
-        var psbtString = fileContent.trim().replace(/\s/g, "");
+        var psbtService =
+          typeof PSBTServiceAlternative !== "undefined"
+            ? PSBTServiceAlternative
+            : PSBTService;
+        var psbtString = psbtService.psbtBytesToBase64(
+          new Uint8Array(e.target.result)
+        );
 
         if (!psbtString) {
           self.showError("File is empty or invalid.");
           return;
         }
 
-        // Hide any previous errors
         self.hideError();
 
-        // Process the PSBT directly (no library loading needed)
-        self.hideError();
-
-        // Process the PSBT
-        // Use alternative service (no external libraries needed)
         try {
-          var psbtService =
-            typeof PSBTServiceAlternative !== "undefined"
-              ? PSBTServiceAlternative
-              : PSBTService;
           self.psbt = psbtService.parsePSBT(psbtString);
-
-          // Get transaction info
           var txInfo = psbtService.getTransactionInfo(self.psbt);
-
-          // Show review state
           self.showReviewState(txInfo);
         } catch (parseError) {
           self.showError("Failed to parse PSBT:\n" + parseError.message);
@@ -1111,8 +1098,7 @@ var ReadyToSignScreen = {
       console.error("FileReader error:", error);
     };
 
-    // Read file as text (PSBT files are base64 text)
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
   },
 
   /**
@@ -1133,8 +1119,8 @@ var ReadyToSignScreen = {
       }
 
       // Check file extension
-      if (!file.name.toLowerCase().endsWith(".psbt")) {
-        self.showError("Invalid file type. Please select a .psbt file.");
+      if (!self.isPSBTFileName(file.name)) {
+        self.showError("Invalid file type. Please select a .psbt or .txt file.");
         // Reset file input
         fileInput.value = "";
         return;
@@ -1144,45 +1130,34 @@ var ReadyToSignScreen = {
       var reader = new FileReader();
       reader.onload = function (e) {
         try {
-          var fileContent = e.target.result;
-
-          // PSBT files from Blue Wallet are base64 encoded
-          // Remove any whitespace/newlines
-          var psbtString = fileContent.trim().replace(/\s/g, "");
+          var psbtService =
+            typeof PSBTServiceAlternative !== "undefined"
+              ? PSBTServiceAlternative
+              : PSBTService;
+          var psbtString = psbtService.psbtBytesToBase64(
+            new Uint8Array(e.target.result)
+          );
 
           if (!psbtString) {
             self.showError("File is empty or invalid.");
             return;
           }
 
-          // Hide any previous errors
           self.hideError();
 
-          // Process the PSBT
-          // Try parsing as base64 PSBT first (most common format)
           try {
-            // Use alternative service
-            var psbtService =
-              typeof PSBTServiceAlternative !== "undefined"
-                ? PSBTServiceAlternative
-                : PSBTService;
             self.psbt = psbtService.parsePSBT(psbtString);
-
-            // Get transaction info
             var txInfo = psbtService.getTransactionInfo(self.psbt);
-
-            // Show review state
             self.showReviewState(txInfo);
           } catch (parseError) {
-            // If base64 parsing fails, try as UR format
-            self.processPSBTString(psbtString);
+            self.showError("Failed to parse PSBT:\n" + parseError.message);
+            console.error("PSBT Parse Error:", parseError);
           }
         } catch (error) {
           self.showError("Failed to read PSBT file: " + error.message);
           console.error("File read error:", error);
         }
 
-        // Reset file input for next use
         fileInput.value = "";
       };
 
@@ -1192,8 +1167,7 @@ var ReadyToSignScreen = {
         fileInput.value = "";
       };
 
-      // Read file as text (PSBT files are base64 text)
-      reader.readAsText(file);
+      reader.readAsArrayBuffer(file);
     };
 
     // Trigger file picker
