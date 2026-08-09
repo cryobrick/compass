@@ -34,10 +34,25 @@ var App = (function () {
     renderScreens();
 
     // First-time or migration: no PIN set → Create PIN; else Compass (plausible deniability)
-    if (!PinService.hasPinSet()) {
-      showScreen("create-pin");
-    } else {
-      showScreen("compass");
+    // localStorage can throw (SecurityError) on some devices. Don't fall
+    // through to create-pin in that case — setting a PIN would fail too.
+    var pinSet;
+    try {
+      pinSet = PinService.hasPinSet();
+    } catch (e) {
+      Boot.fatal("Storage unavailable: " + e.message);
+      return;
+    }
+    showScreen(pinSet ? "compass" : "create-pin");
+
+    // First screen is up — hide the boot indicator and start loading the
+    // heavy library bundles in the background (after a short delay so the
+    // first paint and D-pad input aren't blocked by bundle parsing).
+    Boot.appStarted();
+    if (typeof LibLoader !== "undefined") {
+      setTimeout(function () {
+        LibLoader.startBackgroundLoad();
+      }, 400);
     }
   }
 
@@ -97,7 +112,21 @@ var App = (function () {
   };
 })();
 
-// Start app when DOM is ready
-document.addEventListener("DOMContentLoaded", function () {
-  App.init();
-});
+// Start app when DOM is ready. Any startup error becomes a readable
+// on-screen message instead of a silent white screen.
+function startApp() {
+  try {
+    App.init();
+  } catch (e) {
+    if (typeof Boot !== "undefined") {
+      Boot.fatal(e.message + (e.stack ? "\n" + e.stack : ""));
+    }
+    console.error("App init failed:", e);
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startApp);
+} else {
+  startApp();
+}

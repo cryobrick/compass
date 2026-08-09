@@ -50,6 +50,9 @@ var RestoreWalletScreen = {
     setTimeout(function () {
       self.ensureInputsReady();
     }, 0);
+
+    // Priority-load bip39 now; typing 12 words gives it plenty of time
+    LibLoader.ensure("bip39", function () {});
   },
 
   ensureInputsReady: function () {
@@ -387,11 +390,14 @@ var RestoreWalletScreen = {
   },
 
   validateMnemonic: function (mnemonic) {
-    // Check if BIP39 is loaded
+    // Check if BIP39 is loaded (lazy-loaded; may still be parsing)
     if (typeof window.bip39 === "undefined") {
       return {
         valid: false,
-        error: "BIP39 library not loaded",
+        error:
+          LibLoader.getStatus("bip39") === "error"
+            ? "BIP39 library not loaded"
+            : "Libraries still loading. Try again in a moment.",
       };
     }
 

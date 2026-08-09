@@ -994,3 +994,48 @@ body {
   color: #856404;
   border-color: #ffc107;
 }
+
+/* Boot: static loading indicator (index.html) and error overlay (js/boot.js) */
+.boot-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #666666 !important;
+  background: #ffffff !important;
+}
+
+.boot-error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 320px;
+  z-index: 9999;
+  background: #ffffff !important;
+  color: #000000 !important;
+  padding: 12px 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-y: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.boot-error-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #b00020 !important;
+  margin-bottom: 8px;
+}
+
+.boot-error-loc {
+  margin-top: 8px;
+  color: #666666 !important;
+  font-size: 11px;
+}

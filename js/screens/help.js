@@ -51,6 +51,15 @@ var HelpScreen = {
     }
 
     if (typeof window.qrcode === "undefined") {
+      if (LibLoader.getStatus("qrcode") !== "error") {
+        var self = this;
+        container.innerHTML = "…";
+        LibLoader.ensure("qrcode", function (err) {
+          if (App.getCurrentScreen() !== self) return;
+          if (!err) self.generateQRCode();
+        });
+        return;
+      }
       container.innerHTML = "Lib Error";
       return;
     }

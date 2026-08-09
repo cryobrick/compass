@@ -47,7 +47,28 @@ var CreateWalletScreen = {
   },
 
   generateMnemonic: function () {
+    var self = this;
     try {
+      // BIP39 is lazy-loaded; wait for it if the user got here first
+      if (!LibLoader.isLoaded("bip39")) {
+        var container = document.getElementById("mnemonic-display");
+        if (container) {
+          container.innerHTML =
+            '<div style="padding:20px;text-align:center;color:#666666;">' +
+            "Preparing… please wait" +
+            "</div>";
+        }
+        LibLoader.ensure("bip39", function (err) {
+          if (App.getCurrentScreen() !== self) return;
+          if (err) {
+            self.showError("BIP39 library not loaded: " + err);
+            return;
+          }
+          self.generateMnemonic();
+        });
+        return;
+      }
+
       // Check if BIP39 is loaded
       if (typeof window.bip39 === "undefined") {
         this.showError("BIP39 library not loaded");

@@ -362,6 +362,24 @@ var SetPasswordScreen = {
       return;
     }
 
+    // deriveZpub needs the lazy-loaded bip39 + address bundles
+    if (!LibLoader.isLoaded("bip39") || !LibLoader.isLoaded("address")) {
+      this.showStatus("Loading libraries…");
+      LibLoader.ensure("bip39", function (bipErr) {
+        LibLoader.ensure("address", function (addrErr) {
+          if (App.getCurrentScreen() !== self) return;
+          var err = bipErr || addrErr;
+          if (err) {
+            self.hideStatus();
+            self.showError("Library failed to load: " + err);
+            return;
+          }
+          self.confirmPassword();
+        });
+      });
+      return;
+    }
+
     this.showStatus("Encrypting wallet...");
 
     // Derive zpub before encrypting (while mnemonic is in memory)

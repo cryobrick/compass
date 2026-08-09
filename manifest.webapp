@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "1.1.1",
   "name": "Compass",
   "description": "Simple offline maps and location bookmarks",
   "type": "privileged",
@@ -14,12 +14,6 @@
     "url": "https://github.com/aniketambore"
   },
   "permissions": {
-    "camera": {
-      "description": "Required for scanning PSBT QR codes"
-    },
-    "video-capture": {
-      "description": "Required for scanning PSBT QR codes"
-    },
     "device-storage:sdcard": {
       "access": "readonly",
       "description": "Required to read PSBT files from SD card"
@@ -34,5 +28,5 @@
   },
   "default_locale": "en-US",
   "orientation": ["portrait-primary"],
-  "fullscreen": "true"
+  "fullscreen": true
 }

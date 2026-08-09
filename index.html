@@ -7,23 +7,22 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- Static indicator: visible as soon as CSS loads, hidden by Boot.appStarted() -->
+    <div id="boot-loading" class="boot-loading">Loading&hellip;</div>
+
     <!-- App Container - Screens are rendered here dynamically -->
     <div id="app-container"></div>
+
+    <!-- Boot diagnostics: must load first (external file - inline scripts are blocked by CSP) -->
+    <script src="js/boot.js"></script>
 
     <!-- Core Scripts -->
     <script src="js/navigation.js"></script>
 
-    <!-- BIP39 Library (for mnemonic generation) -->
-    <script src="js/lib/bip39-bundle.js"></script>
-
-    <!-- Address Libraries (BIP32 + bitcoinjs-lib for address generation) -->
-    <script src="js/lib/address-bundle.js"></script>
-
-    <!-- PSBT Libraries (bip174 + jsQR) - LAZY LOADED: Loaded dynamically when needed to avoid memory issues -->
-    <!-- Removed from static loading - will be loaded by ready-to-sign.js -->
-
-    <!-- QR Code Library -->
-    <script src="js/lib/qrcode-bundle.js"></script>
+    <!-- Library bundles (bip39/address/qrcode) are NOT loaded here.
+         They are lazy-loaded by LibLoader after first render so the UI
+         never waits on ~2.4MB of JS (white-screen fix for low-memory devices). -->
+    <script src="js/services/lib-loader.js"></script>
 
     <!-- Services -->
     <script src="js/services/crypto.js"></script>

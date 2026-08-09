@@ -8,7 +8,7 @@ set -e
 # ===================
 # VERSION - Update this for each release
 # ===================
-VERSION="1.1.0"
+VERSION="1.1.1"
 APP_ID="compass"
 APP_ORIGIN="cryobrick.com"
 
@@ -40,6 +40,40 @@ if [ ! -f "dist/app/js/screens/restore-wallet.js" ]; then
 fi
 if ! grep -q "handleFocusChange" "dist/app/js/screens/restore-wallet.js"; then
   echo "❌ ERROR: restore-wallet.js appears to be outdated!"
+  exit 1
+fi
+
+# Boot/loader scripts must be present
+for f in js/boot.js js/services/lib-loader.js; do
+  if [ ! -f "dist/app/$f" ]; then
+    echo "❌ ERROR: $f not found!"
+    exit 1
+  fi
+done
+
+# Library bundles must exist and be sane-sized.
+# js/lib is gitignored — a fresh clone has NO bundles and would otherwise
+# silently ship a broken zip. Rebuild with ./bundle-*.sh if this fails.
+check_bundle() {
+  local f="dist/app/js/lib/$1"
+  if [ ! -f "$f" ]; then
+    echo "❌ ERROR: $1 missing — run ./bundle-*.sh first!"
+    exit 1
+  fi
+  local size
+  size=$(stat -f "%z" "$f" 2>/dev/null || stat -c "%s" "$f")
+  if [ "$size" -lt "$2" ]; then
+    echo "❌ ERROR: $1 is ${size} bytes, expected >= $2 — rebuild with ./bundle-*.sh!"
+    exit 1
+  fi
+}
+check_bundle bip39-bundle.js 500000
+check_bundle address-bundle.js 1000000
+check_bundle qrcode-bundle.js 30000
+
+# Manifest version must match the build version
+if ! grep -q "\"version\": \"${VERSION}\"" manifest.webapp; then
+  echo "❌ ERROR: manifest.webapp version does not match ${VERSION}!"
   exit 1
 fi
 echo "✅ Critical files verified"

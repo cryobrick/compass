@@ -52,6 +52,25 @@ var AddressExplorerScreen = {
   },
 
   loadAddress: function () {
+    var self = this;
+
+    // Address derivation needs the lazy-loaded address bundle
+    if (!LibLoader.isLoaded("address")) {
+      var addressTextEl = document.getElementById("address-text");
+      if (addressTextEl) {
+        addressTextEl.textContent = "Loading libraries…";
+      }
+      LibLoader.ensure("address", function (err) {
+        if (App.getCurrentScreen() !== self) return;
+        if (err) {
+          self.showError("Library failed to load: " + err);
+          return;
+        }
+        self.loadAddress();
+      });
+      return;
+    }
+
     try {
       var zpub = WalletService.getZpub();
       if (!zpub) {
@@ -96,8 +115,17 @@ var AddressExplorerScreen = {
     var container = document.getElementById("qr-container");
     if (!container) return;
 
-    // Check if QR library is loaded
+    // Check if QR library is loaded (lazy-loaded)
     if (typeof window.qrcode === "undefined") {
+      if (LibLoader.getStatus("qrcode") !== "error") {
+        var self = this;
+        container.innerHTML = "…";
+        LibLoader.ensure("qrcode", function (err) {
+          if (App.getCurrentScreen() !== self) return;
+          if (!err) self.generateQRCode(address);
+        });
+        return;
+      }
       container.innerHTML =
         '<div style="padding:20px;text-align:center;color:#cc0000;font-size:11px;">' +
         "QR library not loaded" +

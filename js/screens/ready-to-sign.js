@@ -114,11 +114,24 @@ var ReadyToSignScreen = {
         "error",
         "PSBT service not loaded.\nPlease check psbt-alternative.js"
       );
-    } else if (typeof window.bitcoin === "undefined") {
-      this.updateLibraryStatus(
-        "error",
-        "bitcoinjs-lib not loaded.\nRequired for PSBT operations."
-      );
+    } else if (!LibLoader.isLoaded("address")) {
+      // bitcoinjs-lib is lazy-loaded; signing is user-initiated later,
+      // so just reflect progress in the status banner
+      this.updateLibraryStatus("loading", "Loading libraries…");
+      LibLoader.ensure("address", function (err) {
+        if (App.getCurrentScreen() !== self) return;
+        if (err) {
+          self.updateLibraryStatus(
+            "error",
+            "bitcoinjs-lib not loaded.\nRequired for PSBT operations."
+          );
+          return;
+        }
+        self.updateLibraryStatus("success", "PSBT service ready");
+        setTimeout(function () {
+          self.hideLibraryStatus();
+        }, 2000);
+      });
     } else {
       // PSBT service ready - uses only bitcoinjs-lib (already loaded)
       this.updateLibraryStatus("success", "PSBT service ready");
@@ -545,7 +558,15 @@ var ReadyToSignScreen = {
   },
 
   generateQRCode: function (text, container) {
+    var self = this;
     if (typeof window.qrcode === "undefined") {
+      if (LibLoader.getStatus("qrcode") !== "error") {
+        container.innerHTML = "…";
+        LibLoader.ensure("qrcode", function (err) {
+          if (App.getCurrentScreen() !== self) return;
+          if (!err) self.generateQRCode(text, container);
+        });
+      }
       console.error("QR code library not loaded");
       return;
     }
