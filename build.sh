@@ -8,7 +8,7 @@ set -e
 # ===================
 # VERSION - Update this for each release
 # ===================
-VERSION="1.1.1"
+VERSION="1.1.2"
 APP_ID="compass"
 APP_ORIGIN="cryobrick.com"
 
@@ -31,6 +31,14 @@ cp -rX css dist/app/ 2>/dev/null || cp -r css dist/app/
 cp -rX js dist/app/ 2>/dev/null || cp -r js dist/app/
 # Clean any extended attributes that might have been copied
 find dist/app -type f -exec xattr -c {} \; 2>/dev/null || true
+
+# ES2015 syntax gate — Firefox 48 crashes at parse time on anything newer
+# (desktop browsers/Node accept ES2017+, so only this catches it)
+echo "🔍 Checking ES2015 syntax compatibility..."
+if ! node check-es2015.js; then
+  echo "❌ ERROR: ES2015 syntax check failed!"
+  exit 1
+fi
 
 # Verify critical files are present
 echo "🔍 Verifying critical files..."

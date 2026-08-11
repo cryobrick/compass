@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - Firefox 48 SyntaxError fix (the original white-screen root cause)
+
+- Fix `SyntaxError: expected expression, got ')'` in `js/screens/home.js:113` on KaiOS devices: a trailing comma in a function call argument list (ES2017 syntax) made Firefox 48 fail to parse the whole file, so `HomeScreen` was never defined and startup died. Present since the first commit — this was the root cause of the white screen on real devices; desktop browsers and Node accept the syntax, which is why it never reproduced in testing. Surfaced by the v1.1.1 boot error overlay.
+- Add `check-es2015.js` build gate: every shipped non-bundle JS file is parsed strictly as ES2015 (acorn, from the parent `node_modules` — `npm install acorn` there once) and the build fails on anything newer, so this class of bug can't ship again
+
 ## [1.1.1] - White screen on launch fix
 
 - Fix blank white screen on launch on low-memory devices (JioPhone): library bundles (~2.4MB) are no longer loaded synchronously before first render — they are lazy-loaded in the background after the first screen paints (`js/services/lib-loader.js`)

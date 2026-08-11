@@ -109,7 +109,7 @@ var HomeScreen = {
         subtitle: "Decrypt wallet to backup",
         instructions: "Enter your wallet password to view your mnemonic.",
         buttonText: "Decrypt",
-      },
+      }
     );
     App.showScreen("enter-password");
   },
