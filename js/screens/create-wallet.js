@@ -5,6 +5,9 @@
 var CreateWalletScreen = {
   id: "create-wallet-screen",
   mnemonic: null,
+  // Set by another screen (dice-roll) to display a precomputed mnemonic
+  // instead of generating a random one
+  presetMnemonic: null,
 
   render: function () {
     return (
@@ -38,12 +41,22 @@ var CreateWalletScreen = {
       },
     });
 
-    // Generate mnemonic
-    this.generateMnemonic();
+    if (this.presetMnemonic) {
+      // Mnemonic supplied by the dice-roll flow
+      this.mnemonic = this.presetMnemonic;
+      this.presetMnemonic = null;
+      this.displayMnemonic();
+      Navigation.refreshFocusableItems();
+      this.updateSoftkeys();
+    } else {
+      // Generate mnemonic
+      this.generateMnemonic();
+    }
   },
 
   onExit: function () {
     this.mnemonic = null;
+    this.presetMnemonic = null;
   },
 
   generateMnemonic: function () {

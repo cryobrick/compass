@@ -1,5 +1,5 @@
 {
-  "version": "1.1.2",
+  "version": "1.2.0",
   "name": "Compass",
   "description": "Simple offline maps and location bookmarks",
   "type": "privileged",

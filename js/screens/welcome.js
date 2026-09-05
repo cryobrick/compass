@@ -44,13 +44,20 @@ var WelcomeScreen = {
     var menuHtml = "";
     var index = 0;
 
-    // Only show "Create Wallet" if no wallet exists
+    // Only show creation options if no wallet exists
     if (!WalletService.hasWallet()) {
       menuHtml +=
         '<div class="menu-item" data-index="' +
         index +
         '" data-action="create-wallet">' +
         "Create Wallet" +
+        "</div>";
+      index++;
+      menuHtml +=
+        '<div class="menu-item" data-index="' +
+        index +
+        '" data-action="dice-roll">' +
+        "Create with Dice" +
         "</div>";
       index++;
     }
@@ -77,6 +84,9 @@ var WelcomeScreen = {
     switch (action) {
       case "create-wallet":
         App.showScreen("create-wallet");
+        break;
+      case "dice-roll":
+        App.showScreen("dice-roll");
         break;
       case "restore-wallet":
         App.showScreen("restore-wallet");

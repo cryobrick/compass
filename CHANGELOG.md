@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - Dice roll seed generation
+
+- New "Create with Dice" option on the Welcome screen: generate the 12-word seed from at least 50 real dice rolls instead of device RNG (`js/screens/dice-roll.js`). Coldcard-compatible algorithm — entropy is SHA-256 of the ASCII roll string, first 16 bytes — so the resulting words can be cross-verified with Coldcard's dice tooling
+- Roll entry UI: keys 1-6 add rolls, Backspace/right softkey deletes the last roll, live counter + progress bar + recent-roll strip; capped at 150 rolls; auto-repeat from held keys is ignored
+- The generated words reuse the existing Create Wallet review/confirm flow (new `presetMnemonic` handoff in `js/screens/create-wallet.js`)
+
 ## [1.1.2] - Firefox 48 SyntaxError fix (the original white-screen root cause)
 
 - Fix `SyntaxError: expected expression, got ')'` in `js/screens/home.js:113` on KaiOS devices: a trailing comma in a function call argument list (ES2017 syntax) made Firefox 48 fail to parse the whole file, so `HomeScreen` was never defined and startup died. Present since the first commit — this was the root cause of the white screen on real devices; desktop browsers and Node accept the syntax, which is why it never reproduced in testing. Surfaced by the v1.1.1 boot error overlay.

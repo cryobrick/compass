@@ -1039,3 +1039,72 @@ body {
   color: #666666 !important;
   font-size: 11px;
 }
+
+/* Dice Roll Screen */
+.dice-roll-content {
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.dice-instructions {
+  font-size: 11px;
+  color: #666666 !important;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.dice-counter {
+  font-size: 32px;
+  font-weight: bold;
+  color: #000000 !important;
+  margin: 4px 0 6px;
+}
+
+.dice-progress-track {
+  height: 4px;
+  background: #dddddd !important;
+  border-radius: 2px;
+  margin: 0 16px 10px;
+  overflow: hidden;
+}
+
+.dice-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #000000 !important;
+}
+
+/* If the strip ever overflows, flex-end clips the OLDEST (left) rolls —
+   the newest roll must never be visually cut off */
+.dice-history-wrap {
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+  min-height: 16px;
+  margin-bottom: 8px;
+  padding: 0 8px;
+}
+
+.dice-history {
+  font-family: monospace;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #333333 !important;
+  white-space: pre;
+}
+
+.dice-history-last {
+  font-family: monospace;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  color: #000000 !important;
+  white-space: pre;
+}
+
+.dice-hint {
+  font-size: 11px;
+  color: #cc6600 !important;
+  min-height: 14px;
+  margin-bottom: 4px;
+}
