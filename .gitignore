@@ -21,3 +21,5 @@ npm-debug.log*
 
 # Internal security notes
 security-analysis.txt
+.claude/
+KAIOS_APP_GUIDE.md

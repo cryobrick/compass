@@ -54,6 +54,11 @@ var ScreenName = {
 - **`js/services/pin.js`** — 6-digit PIN with SHA-256(salt + PIN) hashing via `crypto.subtle`
 - **`js/services/psbt-alternative.js`** — Custom minimal PSBT parser/signer using only bitcoinjs-lib (no external PSBT library). BIP143 signing, outputs transaction hex.
 
+### Boot & Lazy Loading
+
+- **`js/boot.js`** — loaded first; installs `window.onerror` → on-screen error overlay (`Boot.fatal`, `Boot.appStarted`), plus a 15s "Still loading…" watchdog. Must stay an external file (privileged-app CSP blocks inline scripts).
+- **`js/services/lib-loader.js`** — the three library bundles are NOT in index.html; `LibLoader.startBackgroundLoad()` injects them after first render (sequential: qrcode → bip39 → address; bip39 must precede address because both set `window.Buffer`). Screens needing a bundle call `LibLoader.ensure(name, cb)` and must check `App.getCurrentScreen()` in the callback.
+
 ### Library Bundles (generated, in `js/lib/`)
 
 Pre-bundled with esbuild targeting ES2015. These are generated (gitignored) artifacts:

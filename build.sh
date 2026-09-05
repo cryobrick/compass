@@ -8,7 +8,7 @@ set -e
 # ===================
 # VERSION - Update this for each release
 # ===================
-VERSION="1.1.2"
+VERSION="1.2.0"
 APP_ID="compass"
 APP_ORIGIN="cryobrick.com"
 

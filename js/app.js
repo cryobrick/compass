@@ -10,6 +10,7 @@ var App = (function () {
     "create-pin": CreatePinScreen,
     welcome: WelcomeScreen,
     "create-wallet": CreateWalletScreen,
+    "dice-roll": DiceRollScreen,
     "restore-wallet": RestoreWalletScreen,
     "set-password": SetPasswordScreen,
     "enter-password": EnterPasswordScreen,
